@@ -3,16 +3,9 @@ import githubLogo from "./assets/github.png";
 import { invoke } from "@tauri-apps/api/tauri";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
-import {
-  sendNotification,
-  requestPermission,
-} from "@tauri-apps/api/notification";
+import { NotificationsPanel } from "./components/NotificationsPanel.tsx";
 
 function App() {
-  async function checkNotificationPerms() {
-    await requestPermission();
-  }
-
   const [hasToken, setHasToken] = useState(false);
   const [token, setToken] = useState("");
 
@@ -27,8 +20,6 @@ function App() {
       alert(data);
       setHasToken(data as boolean);
     });
-    checkNotificationPerms();
-    sendNotification("Does this work?");
   }, []);
 
   const welcomeSectionRef = useRef<HTMLDivElement>(null);
@@ -43,7 +34,7 @@ function App() {
         <div className="container">
           {!welcomed ? (
             <div onClick={onWelcome} ref={welcomeSectionRef}>
-              <h1>GHelper</h1>
+              <h1>HubHelp v0.1</h1>
               <div className="row">
                 <a href="#">
                   <img src={githubLogo} className="logo" alt="GitHub logo" />
@@ -80,17 +71,20 @@ function App() {
             <img src={githubLogo} alt="github logo" className="logo sm" />
             <h3 className="title no-select">HubHelp</h3>
           </div>
-          <Tabs>
+          <Tabs forceRenderTabPanel={true}>
             <TabList className="tab-list">
-              <Tab className="tab no-select" selectedClassName="tab-selected">
-                Search Tool
-              </Tab>
               <Tab className="tab no-select" selectedClassName="tab-selected">
                 Notifications
               </Tab>
+              <Tab className="tab no-select" selectedClassName="tab-selected">
+                Search Tool
+              </Tab>
             </TabList>
-
             <TabPanel>
+              <NotificationsPanel />
+            </TabPanel>
+            <TabPanel>
+              <p>Coming soon...</p>
               <p>
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim
                 excepturi, expedita modi molestias ullam unde? Aliquam,
@@ -101,32 +95,6 @@ function App() {
                 obcaecati odio odit porro praesentium quibusdam sint soluta
                 tempora, tempore ut voluptas voluptatibus.
               </p>
-            </TabPanel>
-            <TabPanel>
-              <br />
-              <div className="row-center gap-1">
-                <input type="checkbox" id="enable-notifications" />
-                <label htmlFor="enable-notifications">
-                  Enable Desktop Notifications
-                </label>
-              </div>
-              <br />
-              <div className="row-center gap-1">
-                <label htmlFor="notify-interval">
-                  Check every{" "}
-                  <input
-                    type="number"
-                    id="notify-interval"
-                    defaultValue={30}
-                    style={{ maxWidth: "6ch" }}
-                  />{" "}
-                  seconds
-                </label>
-              </div>
-              <br />
-              <div className="row-center gap-1">
-                <button>Open Notifications</button>
-              </div>
             </TabPanel>
           </Tabs>
         </>
