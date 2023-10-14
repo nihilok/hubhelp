@@ -26,7 +26,8 @@ function App() {
       {!welcomed && (
         <div className="container">
           <div onClick={onWelcome} ref={welcomeSectionRef}>
-            <h1>HubHelp v0.1</h1>
+            <h1>HubHelper v0.1</h1>
+            <br />
             <div className="row">
               <a href="#">
                 <img src={githubLogo} className="logo" alt="GitHub logo" />
@@ -41,7 +42,7 @@ function App() {
         <>
           <div className="row-center gap-1">
             <img src={githubLogo} alt="github logo" className="logo sm" />
-            <h3 className="title no-select">HubHelp</h3>
+            <h3 className="title no-select">HubHelper</h3>
           </div>
           <Tabs forceRenderTabPanel={true}>
             <TabList className="tab-list">

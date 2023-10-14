@@ -74,54 +74,6 @@ export function SearchPanel() {
             autoCapitalize="none"
           />
         </div>
-        <div
-          className={classNames("input-wrapper", {
-            "show-label": formState.author,
-          })}
-          data-label="Author"
-        >
-          <input
-            name="author"
-            placeholder="Author (optional)"
-            value={formState.author ?? ""}
-            onChange={onChange}
-            disabled={codeSearch}
-            autoCorrect="off"
-            autoCapitalize="none"
-          />
-        </div>
-        <div
-          className={classNames("input-wrapper", {
-            "show-label": formState.commenter,
-          })}
-          data-label="Commenter"
-        >
-          <input
-            name="commenter"
-            placeholder="Commenter (optional)"
-            value={formState.commenter ?? ""}
-            onChange={onChange}
-            disabled={codeSearch}
-            autoCorrect="off"
-            autoCapitalize="none"
-          />
-        </div>
-        <div
-          className={classNames("input-wrapper", {
-            "show-label": formState.term,
-          })}
-          data-label="Query"
-        >
-          <input
-            name="term"
-            placeholder="Search for..."
-            value={formState.term}
-            onChange={onChange}
-            autoCorrect="off"
-            autoCapitalize="none"
-          />
-        </div>
-
         <div className="type-radio-group">
           <div>
             <input
@@ -170,6 +122,54 @@ export function SearchPanel() {
             <label htmlFor="type-code">Code</label>
           </div>
         </div>
+        <div
+          className={classNames("input-wrapper", {
+            "show-label": formState.term,
+          })}
+          data-label="Query"
+        >
+          <input
+            name="term"
+            placeholder="Search for..."
+            value={formState.term}
+            onChange={onChange}
+            autoCorrect="off"
+            autoCapitalize="none"
+          />
+        </div>
+        <div
+          className={classNames("input-wrapper", {
+            "show-label": formState.author,
+          })}
+          data-label="Author"
+        >
+          <input
+            name="author"
+            placeholder="Author (optional)"
+            value={formState.author ?? ""}
+            onChange={onChange}
+            disabled={codeSearch}
+            autoCorrect="off"
+            autoCapitalize="none"
+          />
+        </div>
+        <div
+          className={classNames("input-wrapper", {
+            "show-label": formState.commenter,
+          })}
+          data-label="Commenter"
+        >
+          <input
+            name="commenter"
+            placeholder="Commenter (optional)"
+            value={formState.commenter ?? ""}
+            onChange={onChange}
+            disabled={codeSearch}
+            autoCorrect="off"
+            autoCapitalize="none"
+          />
+        </div>
+
         <div style={{ textAlign: "center" }}>
           <input
             type="checkbox"
