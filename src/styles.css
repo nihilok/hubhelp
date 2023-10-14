@@ -127,7 +127,7 @@ button {
 }
 
 .fade-out {
-  animation: fadeOut 1s ease forwards;
+  animation: fadeOut 500ms ease forwards;
 }
 
 @media (prefers-color-scheme: dark) {

@@ -17,7 +17,7 @@ function App() {
   }, []);
   const welcomeSectionRef = useRef<HTMLDivElement>(null);
   function onWelcome() {
-    setTimeout(() => setWelcomed(true), 1000);
+    setTimeout(() => setWelcomed(true), 500);
     welcomeSectionRef.current?.classList.add("fade-out");
   }
 
