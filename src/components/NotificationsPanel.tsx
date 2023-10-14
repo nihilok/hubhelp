@@ -3,6 +3,7 @@ import {
   requestPermission,
   sendNotification,
 } from "@tauri-apps/api/notification";
+import React from "react";
 import { useEffect, useRef, useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 
@@ -15,7 +16,18 @@ interface INotification {
 
 type Response = { notifications: INotification[] };
 
-export function NotificationsPanel() {
+interface Props {
+  hasToken: boolean;
+  setHasToken: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export function NotificationsPanel({ hasToken, setHasToken }: Props) {
+  const [token, setToken] = useState("");
+
+  async function updateToken() {
+    setHasToken(await invoke("set_token", { token }));
+  }
+
   async function checkNotificationPerms() {
     let perms = await isPermissionGranted();
     if (!perms) {
@@ -96,7 +108,24 @@ export function NotificationsPanel() {
     setIntervalValue(parseInt(value));
   }
 
-  return (
+  return !hasToken ? (
+    <>
+      <form
+        className="row"
+        onSubmit={(e) => {
+          e.preventDefault();
+          updateToken();
+        }}
+      >
+        <input
+          id="token-input"
+          onChange={(e) => setToken(e.currentTarget.value)}
+          placeholder="Personal Access Token..."
+        />
+        <button type="submit">UPDATE</button>
+      </form>
+    </>
+  ) : (
     <>
       <br />
       <div className="row-center gap-1">

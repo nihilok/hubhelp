@@ -1,14 +1,61 @@
 .search-panel {
-    height: 75vh;
-    overflow: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  height: 75vh;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .search-panel .search-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.search-panel .search-form .type-radio-group {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.search-panel input:disabled + label {
+  color: #5f5f5f;
+  cursor: not-allowed;
+}
+.search-panel input:disabled {
+  cursor: not-allowed;
+  color: #5f5f5f;
+}
+
+.search-panel input:disabled::placeholder {
+  color: #2f2f2f;
+}
+
+.repo-input {
+  color: #396cd8;
+  font-weight: bold;
+}
+
+.search-panel .input-wrapper {
+  width: max-content;
+  margin: 0 auto;
+  position: relative;
+}
+
+.search-panel .input-wrapper input {
+  min-width: 23ch;
+}
+
+.search-panel .input-wrapper.show-label::before {
+  position: absolute;
+  display: flex;
+  justify-content: flex-end;
+  width: 4rem;
+  content: attr(data-label);
+  left: -4.5rem;
+  margin-top: 0.5rem;
+  text-align: right;
+  color: #5f5f5f;
+  font-size: 0.75rem;
 }

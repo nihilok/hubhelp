@@ -7,6 +7,8 @@ mod token;
 mod errors;
 mod search;
 
+use search::gh_search;
+
 use notifications::{get_notifications, set_token, single_request};
 
 
@@ -18,7 +20,7 @@ async fn has_token() -> bool {
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![get_notifications, has_token, set_token])
+        .invoke_handler(tauri::generate_handler![get_notifications, has_token, set_token, gh_search])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

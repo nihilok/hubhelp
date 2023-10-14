@@ -1,28 +1,20 @@
 import { useEffect, useRef, useState } from "react";
 import githubLogo from "./assets/github.png";
-import { invoke } from "@tauri-apps/api/tauri";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import { NotificationsPanel } from "./components/NotificationsPanel.tsx";
-import {SearchPanel} from "./components/SearchPanel.tsx";
+import { SearchPanel } from "./components/SearchPanel.tsx";
+import { invoke } from "@tauri-apps/api/tauri";
 
 function App() {
-  const [hasToken, setHasToken] = useState(false);
-  const [token, setToken] = useState("");
-
-  async function updateToken() {
-    // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-    setHasToken(await invoke("set_token", { token }));
-  }
   const [welcomed, setWelcomed] = useState(false);
-
+  const [hasToken, setHasToken] = useState(false);
   useEffect(() => {
     invoke("has_token").then((data) => {
       alert(data);
       setHasToken(data as boolean);
     });
   }, []);
-
   const welcomeSectionRef = useRef<HTMLDivElement>(null);
   function onWelcome() {
     setTimeout(() => setWelcomed(true), 1000);
@@ -31,42 +23,21 @@ function App() {
 
   return (
     <>
-      {(!welcomed || !hasToken) && (
+      {!welcomed && (
         <div className="container">
-          {!welcomed ? (
-            <div onClick={onWelcome} ref={welcomeSectionRef}>
-              <h1>HubHelp v0.1</h1>
-              <div className="row">
-                <a href="#">
-                  <img src={githubLogo} className="logo" alt="GitHub logo" />
-                </a>
-              </div>
-              <p>Manage notifications, search PRs and more.</p>
+          <div onClick={onWelcome} ref={welcomeSectionRef}>
+            <h1>HubHelp v0.1</h1>
+            <div className="row">
+              <a href="#">
+                <img src={githubLogo} className="logo" alt="GitHub logo" />
+              </a>
             </div>
-          ) : (
-            !hasToken && (
-              <>
-                <form
-                  className="row"
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    updateToken();
-                  }}
-                >
-                  <input
-                    id="token-input"
-                    onChange={(e) => setToken(e.currentTarget.value)}
-                    placeholder="Personal Access Token..."
-                  />
-                  <button type="submit">UPDATE</button>
-                </form>
-              </>
-            )
-          )}
+            <p>Manage notifications, search PRs and more.</p>
+          </div>
         </div>
       )}
 
-      {welcomed && hasToken && (
+      {welcomed && (
         <>
           <div className="row-center gap-1">
             <img src={githubLogo} alt="github logo" className="logo sm" />
@@ -82,10 +53,13 @@ function App() {
               </Tab>
             </TabList>
             <TabPanel>
-              <NotificationsPanel />
+              <NotificationsPanel
+                hasToken={hasToken}
+                setHasToken={setHasToken}
+              />
             </TabPanel>
             <TabPanel>
-              <SearchPanel/>
+              <SearchPanel />
             </TabPanel>
           </Tabs>
         </>
