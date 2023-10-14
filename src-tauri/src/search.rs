@@ -6,7 +6,7 @@ fn build_search_url(term: String, repo: String, author: Option<String>, commente
     let mut base_url = String::from("https://github.com/search?q=");
     base_url.push_str("repo%3A");
     base_url.push_str(&encode(&repo));
-    base_url.push_str(&format!("+{}", term));
+    base_url.push_str(&format!("+{}", encode(&term)));
     if in_comments {
         base_url.push_str("+in%3Acomments")
     }
