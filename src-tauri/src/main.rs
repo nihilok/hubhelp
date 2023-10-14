@@ -8,7 +8,7 @@ mod errors;
 mod search;
 
 use notifications::{get_notifications, set_token, single_request};
-use crate::token::read_token_file_path;
+
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
