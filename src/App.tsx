@@ -4,6 +4,7 @@ import { invoke } from "@tauri-apps/api/tauri";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import { NotificationsPanel } from "./components/NotificationsPanel.tsx";
+import {SearchPanel} from "./components/SearchPanel.tsx";
 
 function App() {
   const [hasToken, setHasToken] = useState(false);
@@ -84,17 +85,7 @@ function App() {
               <NotificationsPanel />
             </TabPanel>
             <TabPanel>
-              <p>Coming soon...</p>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim
-                excepturi, expedita modi molestias ullam unde? Aliquam,
-                assumenda consequatur error, est incidunt, laborum magni
-                mollitia nobis omnis rem repellat tempora vel voluptate? A alias
-                atque consectetur dolor dolore, excepturi exercitationem
-                expedita explicabo facilis fuga itaque libero maiores maxime
-                obcaecati odio odit porro praesentium quibusdam sint soluta
-                tempora, tempore ut voluptas voluptatibus.
-              </p>
+              <SearchPanel/>
             </TabPanel>
           </Tabs>
         </>

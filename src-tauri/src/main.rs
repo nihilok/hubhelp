@@ -5,8 +5,10 @@ mod notifications;
 mod request;
 mod token;
 mod errors;
+mod search;
 
 use notifications::{get_notifications, set_token, single_request};
+use crate::token::read_token_file_path;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -15,7 +17,10 @@ async fn has_token() -> bool {
         Some(_token) => {
             match single_request().await { Ok(_) => true, _ => false }
         },
-        None => false
+        None => match read_token_file_path() {
+            Ok(_token) => true,
+            Err(_) => false
+        }
     }
 }
 

@@ -1,5 +1,7 @@
+use std::env;
 use crate::request;
 use crate::request::Notification;
+use crate::token::write_token_to_file;
 
 #[derive(Clone, serde::Serialize)]
 pub struct Payload {
@@ -25,6 +27,7 @@ pub async fn get_notifications() -> Payload {
 
 #[tauri::command]
 pub fn set_token(token: &str) -> bool {
-    std::env::set_var("GH_NOTIFIER_TOKEN", token);
+    write_token_to_file(token);
+    env::set_var("GH_NOTIFIER_TOKEN", token);
     true
 }
