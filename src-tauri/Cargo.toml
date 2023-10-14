@@ -1,5 +1,5 @@
 [package]
-name = "hubhelp"
+name = "hubhelper"
 version = "0.1.0"
 description = "Tools to help with GitHub"
 authors = ["nihilok"]
