@@ -44,7 +44,7 @@
 }
 
 .search-panel .input-wrapper input {
-  min-width: 23ch;
+  min-width: 14rem;
 }
 
 .search-panel .input-wrapper.show-label::before {

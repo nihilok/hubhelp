@@ -6,8 +6,8 @@ import classNames from "classnames";
 interface FormState extends InvokeArgs {
   repo: string;
   term: string;
-  author: string;
-  commenter: string;
+  author: string | null;
+  commenter: string | null;
   searchType: string;
 }
 
@@ -20,10 +20,21 @@ export function SearchPanel() {
 
   async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
-    await invoke("gh_search", {
-      ...formState,
-      inComments: inCommentsToggle,
-    });
+    let payload: FormState;
+    if (codeSearch) {
+      payload = {
+        repo: formState.repo,
+        term: formState.term,
+        author: null,
+        commenter: null,
+        searchType: formState.searchType,
+        inComments: false,
+      };
+    } else {
+      payload = { ...formState, inComments: inCommentsToggle };
+    }
+
+    await invoke("gh_search", { ...payload });
   }
 
   function onChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -45,8 +56,6 @@ export function SearchPanel() {
 
   return (
     <div className="search-panel">
-      <h3>GitHub Search Tool</h3>
-      <br />
       <form onSubmit={onSubmit} className="search-form">
         <div
           className={classNames("input-wrapper", {
@@ -61,6 +70,8 @@ export function SearchPanel() {
             onChange={onChange}
             required={true}
             className="repo-input"
+            autoCorrect="off"
+            autoCapitalize="none"
           />
         </div>
         <div
@@ -72,9 +83,11 @@ export function SearchPanel() {
           <input
             name="author"
             placeholder="Author (optional)"
-            value={formState.author}
+            value={formState.author ?? ""}
             onChange={onChange}
             disabled={codeSearch}
+            autoCorrect="off"
+            autoCapitalize="none"
           />
         </div>
         <div
@@ -86,9 +99,11 @@ export function SearchPanel() {
           <input
             name="commenter"
             placeholder="Commenter (optional)"
-            value={formState.commenter}
+            value={formState.commenter ?? ""}
             onChange={onChange}
             disabled={codeSearch}
+            autoCorrect="off"
+            autoCapitalize="none"
           />
         </div>
         <div
@@ -102,6 +117,8 @@ export function SearchPanel() {
             placeholder="Search for..."
             value={formState.term}
             onChange={onChange}
+            autoCorrect="off"
+            autoCapitalize="none"
           />
         </div>
 

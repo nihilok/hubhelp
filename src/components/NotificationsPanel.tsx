@@ -108,59 +108,64 @@ export function NotificationsPanel({ hasToken, setHasToken }: Props) {
     setIntervalValue(parseInt(value));
   }
 
-  return !hasToken ? (
-    <>
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          updateToken();
-        }}
-      >
-        <input
-          id="token-input"
-          onChange={(e) => setToken(e.currentTarget.value)}
-          placeholder="Personal Access Token..."
-        />
-        <button type="submit">UPDATE</button>
-      </form>
-    </>
-  ) : (
-    <>
-      <br />
-      <div className="row-center gap-1">
-        <a href={"https://github.com/notifications"} target="_blank">
-          Go to Notifications
-        </a>
-      </div>
-      <br />
-      <br />
-      <div className="row-center gap-1">
-        <input
-          type="checkbox"
-          id="enable-notifications"
-          onChange={(e) => {
-            setNotificationsEnabled(e.target.checked);
-          }}
-        />
-        <label htmlFor="enable-notifications">
-          Enable Desktop Notifications
-        </label>
-      </div>
-      <br />
-      <div className="row-center gap-1">
-        <label htmlFor="notify-interval">
-          Check every{" "}
-          <input
-            type="number"
-            id="notify-interval"
-            value={intervalValue}
-            onChange={(e) => onSetInterval(e.target.value)}
-            style={{ maxWidth: "6ch" }}
-          />{" "}
-          seconds
-        </label>
-      </div>
-    </>
+  return (
+    <div className="notifications-panel">
+      {!hasToken ? (
+        <>
+          <form
+            className="token-form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              updateToken();
+            }}
+          >
+            <input
+              id="token-input"
+              onChange={(e) => setToken(e.currentTarget.value)}
+              placeholder="Personal Access Token"
+            />
+            <button type="submit">UPDATE</button>
+          </form>
+          <p>
+            Personal Access Token with <b>notifications</b> scope
+          </p>
+        </>
+      ) : (
+        <>
+          <div className="row-center gap-1">
+            <a href={"https://github.com/notifications"} target="_blank">
+              Go to Notifications
+            </a>
+          </div>
+          <br />
+          <div className="row-center gap-1">
+            <input
+              type="checkbox"
+              id="enable-notifications"
+              onChange={(e) => {
+                setNotificationsEnabled(e.target.checked);
+              }}
+            />
+            <label htmlFor="enable-notifications">
+              Enable Desktop Notifications
+            </label>
+          </div>
+          <br />
+          <div className="row-center gap-1">
+            <label htmlFor="notify-interval">
+              Check every{" "}
+              <input
+                type="number"
+                id="notify-interval"
+                value={intervalValue}
+                onChange={(e) => onSetInterval(e.target.value)}
+                style={{ maxWidth: "6ch" }}
+              />{" "}
+              seconds
+            </label>
+          </div>
+        </>
+      )}
+    </div>
   );
 }

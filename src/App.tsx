@@ -49,7 +49,7 @@ function App() {
                 Notifications
               </Tab>
               <Tab className="tab no-select" selectedClassName="tab-selected">
-                Search Tool
+                Search
               </Tab>
             </TabList>
             <TabPanel>

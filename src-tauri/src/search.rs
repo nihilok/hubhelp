@@ -10,19 +10,19 @@ fn build_search_url(term: String, repo: String, author: Option<String>, commente
     if in_comments {
         base_url.push_str("+in%3Acomments")
     }
-    if let Some(a) = author {
-        if a.len() > 0 {
-            base_url.push_str("&author%3A");
-            base_url.push_str(&a);
-        }
-
-    }
     if let Some(c) = commenter {
         if c.len() > 0 {
-            base_url.push_str("&commenter%3A");
+            base_url.push_str("+commenter%3A");
             base_url.push_str(&c);
         }
     }
+    if let Some(a) = author {
+        if a.len() > 0 {
+            base_url.push_str("+author%3A");
+            base_url.push_str(&a);
+        }
+    }
+
     base_url.push_str(&format!("&type={search_type}"));
     base_url
 }

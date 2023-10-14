@@ -195,3 +195,17 @@ button {
   font-weight: bold;
   user-select: none;
 }
+
+.token-form {
+  display: flex;
+  justify-content: center;
+}
+
+.notifications-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+  overflow: auto;
+}
