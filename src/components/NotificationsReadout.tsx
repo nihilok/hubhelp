@@ -1,0 +1,21 @@
+import { NotificationJson } from "./NotificationsPanel.tsx";
+import { NotificationRow } from "./NotificationRow.tsx";
+
+export function NotificationsReadout({
+  notifications,
+}: {
+  notifications: NotificationJson[];
+}) {
+  return (
+    notifications.length > 0 && (
+      <>
+        <div className="notifications-table-header">Unread Notifications:</div>
+        <div className="notifications-table">
+          {notifications.map((n) => (
+            <NotificationRow notification={n} />
+          ))}
+        </div>
+      </>
+    )
+  );
+}

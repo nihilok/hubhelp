@@ -6,15 +6,17 @@ import {
 import React from "react";
 import { useEffect, useRef, useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
+import { NotificationsReadout } from "./NotificationsReadout.tsx";
+import "./notifications.css";
 
-interface INotification {
+export interface NotificationJson {
   id: string;
   subject: { title: string; url: string; latest_comment_url: string };
   reason: string;
   updated_at: string;
 }
 
-type Response = { notifications: INotification[] };
+type Response = { notifications: NotificationJson[] };
 
 interface Props {
   hasToken: boolean;
@@ -39,7 +41,7 @@ export function NotificationsPanel({ hasToken, setHasToken }: Props) {
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [permissionGranted, setPermissionGranted] = useState(false);
   const [notificationsQueue, setNotificiationsQueue] = useState<
-    INotification[]
+    NotificationJson[]
   >([]);
 
   const [intervalValue, setIntervalValue] = useState(
@@ -59,34 +61,12 @@ export function NotificationsPanel({ hasToken, setHasToken }: Props) {
     }
   }, [notificationsEnabled, permissionGranted]);
 
-  const interval = useRef<ReturnType<typeof setInterval>>();
+  const notifyInterval = useRef<ReturnType<typeof setInterval>>();
+  const getInterval = useRef<ReturnType<typeof setInterval>>();
 
   function enqueue(response: Response) {
-    setNotificiationsQueue([...notificationsQueue, ...response.notifications]);
-    console.log(response.notifications);
+    setNotificiationsQueue(response.notifications);
   }
-
-  function dequeue() {
-    setNotificiationsQueue(([_, ...rest]) => rest);
-  }
-
-  useEffect(() => {
-    if (!notificationsQueue.length) {
-      return;
-    }
-    const nextNotification = notificationsQueue[0];
-    sendNotification({
-      title: nextNotification.reason
-        .split("_")
-        .map(
-          (word) => `${word.substring(0, 1).toUpperCase()}${word.substring(1)}`,
-        )
-        .join(" "),
-      body: nextNotification.subject.title,
-      sound: "Pop",
-    });
-    dequeue();
-  }, [notificationsQueue]);
 
   useEffect(() => {
     if (notificationsEnabled) {
@@ -94,14 +74,32 @@ export function NotificationsPanel({ hasToken, setHasToken }: Props) {
         invoke("get_notifications").then((result) =>
           enqueue(result as Response),
         );
-      clearInterval(interval.current);
+      clearInterval(getInterval.current);
       loopedFunc();
-      interval.current = setInterval(loopedFunc, 1000 * intervalValue);
+      getInterval.current = setInterval(loopedFunc, 1000);
     } else {
-      clearInterval(interval.current);
+      clearInterval(getInterval.current);
     }
-    return () => clearInterval(interval.current);
+    return () => clearInterval(getInterval.current);
   }, [notificationsEnabled, intervalValue]);
+
+  useEffect(() => {
+    clearInterval(notifyInterval.current);
+    if (!notificationsEnabled) {
+      return;
+    }
+    if (!notificationsQueue.length) {
+      return;
+    }
+    const loopFunc = () => {
+      sendNotification({
+        body: "You have unread notifications",
+        sound: "Funk",
+        title: "HubHelper Notification",
+      });
+    };
+    notifyInterval.current = setInterval(loopFunc, 1000 * intervalValue);
+  }, [notificationsQueue]);
 
   function onSetInterval(value: string) {
     localStorage.setItem("notify-interval", value);
@@ -132,11 +130,6 @@ export function NotificationsPanel({ hasToken, setHasToken }: Props) {
         </>
       ) : (
         <>
-          <div className="row-center gap-1">
-            <a href={"https://github.com/notifications"} target="_blank">
-              Go to Notifications
-            </a>
-          </div>
           <br />
           <div className="row-center gap-1">
             <input
@@ -153,7 +146,7 @@ export function NotificationsPanel({ hasToken, setHasToken }: Props) {
           <br />
           <div className="row-center gap-1">
             <label htmlFor="notify-interval">
-              Check every{" "}
+              Notify every{" "}
               <input
                 type="number"
                 id="notify-interval"
@@ -163,6 +156,12 @@ export function NotificationsPanel({ hasToken, setHasToken }: Props) {
               />{" "}
               seconds
             </label>
+          </div>
+          <NotificationsReadout notifications={notificationsQueue} />
+          <div className="row-center gap-1 notifications-link">
+            <a href={"https://github.com/notifications"} target="_blank">
+              View All Notifications
+            </a>
           </div>
         </>
       )}
