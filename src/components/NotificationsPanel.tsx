@@ -69,17 +69,12 @@ export function NotificationsPanel({ hasToken, setHasToken }: Props) {
   }
 
   useEffect(() => {
-    if (notificationsEnabled) {
-      const loopedFunc = () =>
-        invoke("get_notifications").then((result) =>
-          enqueue(result as Response),
-        );
-      clearInterval(getInterval.current);
-      loopedFunc();
-      getInterval.current = setInterval(loopedFunc, 1000);
-    } else {
-      clearInterval(getInterval.current);
-    }
+    const loopedFunc = () =>
+      invoke("get_notifications").then((result) => enqueue(result as Response));
+    clearInterval(getInterval.current);
+    loopedFunc();
+    getInterval.current = setInterval(loopedFunc, 1000);
+
     return () => clearInterval(getInterval.current);
   }, [notificationsEnabled, intervalValue]);
 
