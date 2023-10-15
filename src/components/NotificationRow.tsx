@@ -5,9 +5,18 @@ export function NotificationRow({
 }: {
   notification: NotificationJson;
 }) {
+  function buildUrl(apiUrl: string) {
+    if (!apiUrl) {
+      return "#";
+    }
+    const parts = apiUrl.split("/");
+    return `https://github.com/${parts[4]}/${[parts[5]]}/${parts[6]}/${
+      parts[7]
+    }`;
+  }
   return (
     <li className="notification-row">
-      <a href={notification.subject.url} target="_blank">
+      <a href={buildUrl(notification.subject.url)} target="_blank">
         <h4>
           {notification.reason
             .split("_")
