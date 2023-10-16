@@ -10,10 +10,11 @@ export function NotificationRow({
       return "#";
     }
     const parts = apiUrl.split("/");
-    return `https://github.com/${parts[4]}/${[parts[5]]}/${parts[6]}/${
-      parts[7]
-    }`;
+    return `https://github.com/${parts[4]}/${[parts[5]]}/${
+      parts[6] === "issues" ? "issues" : "pull"
+    }/${parts[7]}`;
   }
+
   return (
     <li className="notification-row">
       <a href={buildUrl(notification.subject.url)} target="_blank">
