@@ -6,6 +6,32 @@ import { NotificationsPanel } from "./components/NotificationsPanel.tsx";
 import { SearchPanel } from "./components/SearchPanel.tsx";
 import { invoke } from "@tauri-apps/api/tauri";
 
+function SplashScreen(props: { setWelcomed: (w: boolean) => void }) {
+  const welcomeSectionRef = useRef<HTMLDivElement>(null);
+  function onWelcome() {
+    setTimeout(() => props.setWelcomed(true), 500);
+    welcomeSectionRef.current?.classList.add("fade-out");
+  }
+
+  useEffect(() => {
+    const t = setTimeout(onWelcome, 500);
+    return () => clearTimeout(t);
+  }, []);
+
+  return (
+    <div className="container">
+      <div ref={welcomeSectionRef}>
+        <h1>HubHelper v0.1</h1>
+        <br />
+        <a href="#">
+          <img src={githubLogo} className="logo" alt="GitHub logo" />
+        </a>
+        <p>Manage notifications, search PRs and more.</p>
+      </div>
+    </div>
+  );
+}
+
 function App() {
   const [welcomed, setWelcomed] = useState(false);
   const [hasToken, setHasToken] = useState(false);
@@ -15,29 +41,10 @@ function App() {
       setHasToken(data as boolean);
     });
   }, []);
-  const welcomeSectionRef = useRef<HTMLDivElement>(null);
-  function onWelcome() {
-    setTimeout(() => setWelcomed(true), 500);
-    welcomeSectionRef.current?.classList.add("fade-out");
-  }
 
   return (
     <>
-      {!welcomed && (
-        <div className="container">
-          <div onClick={onWelcome} ref={welcomeSectionRef}>
-            <h1>HubHelper v0.1</h1>
-            <br />
-            <div className="row">
-              <a href="#">
-                <img src={githubLogo} className="logo" alt="GitHub logo" />
-              </a>
-            </div>
-            <p>Manage notifications, search PRs and more.</p>
-          </div>
-        </div>
-      )}
-
+      {!welcomed && <SplashScreen setWelcomed={setWelcomed} />}
       {welcomed && (
         <>
           <div className="row-center gap-1">

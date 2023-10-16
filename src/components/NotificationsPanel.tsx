@@ -161,7 +161,10 @@ export function NotificationsPanel({ hasToken, setHasToken }: Props) {
             <button type="submit">UPDATE</button>
           </form>
           <p>
-            Personal Access Token with <b>notifications</b> scope
+            <a href="https://github.com/settings/tokens" target="_blank">
+              Personal Access Token
+            </a>{" "}
+            with <b>notifications</b> scope
           </p>
         </>
       ) : (

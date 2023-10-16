@@ -6,16 +6,16 @@ export function NotificationsReadout({
 }: {
   notifications: NotificationJson[];
 }) {
-  return (
-    notifications.length > 0 && (
-      <>
-        <div className="notifications-table-header">Unread Notifications:</div>
-        <div className="notifications-table">
-          {notifications.map((n) => (
-            <NotificationRow notification={n} />
-          ))}
-        </div>
-      </>
-    )
+  return notifications.length > 0 ? (
+    <>
+      <div className="notifications-table-header">Unread Notifications:</div>
+      <div className="notifications-table">
+        {notifications.map((n) => (
+          <NotificationRow notification={n} />
+        ))}
+      </div>
+    </>
+  ) : (
+    <div className="notifications-table-header">No Unread Notifications</div>
   );
 }
