@@ -66,21 +66,28 @@ export function NotificationsPanel({ hasToken, setHasToken }: Props) {
   const notifyInterval = useRef<ReturnType<typeof setInterval>>();
   const getInterval = useRef<ReturnType<typeof setInterval>>();
 
+  const skipUpdate = useRef(false);
+
   function enqueue(response: Response) {
-    if (!response.notifications.length) {
-      setNotificiationsQueue([]);
-    }
-    const existing = notificationsQueue.map((n) => n.id);
-    if (response.notifications.length < notificationsQueue.length) {
-      setNotificiationsQueue(response.notifications);
-    }
-    const updated = response.notifications.map((n) => n.id);
-    for (const u of updated) {
-      if (!existing.includes(u)) {
-        setNotificiationsQueue(response.notifications);
-        break;
+    setNotificiationsQueue((prevQueue) => {
+      if (!response.notifications.length) {
+        return [];
       }
-    }
+      const existing = prevQueue.map((n) => n.id);
+      if (response.notifications.length < prevQueue.length) {
+        skipUpdate.current = true;
+        return response.notifications;
+      }
+      const updated = response.notifications.map((n) => n.id);
+      for (const u of updated) {
+        if (!existing.includes(u)) {
+          return response.notifications;
+        }
+      }
+      // IMPORTANT: Return previous state to prevent unnecessary re-renders
+      // If queue didn't change
+      return prevQueue;
+    });
   }
 
   useEffect(() => {
@@ -95,7 +102,12 @@ export function NotificationsPanel({ hasToken, setHasToken }: Props) {
 
   useEffect(() => {
     clearInterval(notifyInterval.current);
-    if (!notificationsEnabled || !notificationsQueue.length) {
+    if (
+      !notificationsEnabled ||
+      !notificationsQueue.length ||
+      skipUpdate.current
+    ) {
+      skipUpdate.current = false;
       return;
     }
     const loopFunc = () => {
@@ -112,7 +124,7 @@ export function NotificationsPanel({ hasToken, setHasToken }: Props) {
     loopFunc();
     notifyInterval.current = setInterval(loopFunc, 1000 * 60 * intervalValue);
     return () => clearInterval(notifyInterval.current);
-  }, [intervalValue, notificationsEnabled]);
+  }, [intervalValue, notificationsEnabled, notificationsQueue]);
 
   let notificationIntervalTimeout = useRef<ReturnType<typeof setTimeout>>();
   const [tempIntervalValue, setTempIntervalValue] =
@@ -170,7 +182,7 @@ export function NotificationsPanel({ hasToken, setHasToken }: Props) {
           <br />
           <div className="row-center gap-1">
             <label htmlFor="notify-interval">
-              Notify every{" "}
+              Remind every{" "}
               <input
                 type="number"
                 id="notify-interval"
