@@ -1,5 +1,5 @@
 use std::{env, io};
-use std::fs::{File};
+use std::fs::File;
 use std::io::{Read, Write};
 use crate::errors;
 
@@ -34,4 +34,11 @@ pub fn get_token() -> Result<String, errors::RuntimeErrors> {
             Ok(read_token_file_path()?)
         }
     }
+}
+
+#[tauri::command]
+pub fn set_token(token: &str) -> bool {
+    write_token_to_file(token);
+    env::set_var("GH_NOTIFIER_TOKEN", token);
+    true
 }
