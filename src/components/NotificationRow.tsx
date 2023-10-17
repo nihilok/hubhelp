@@ -1,9 +1,12 @@
 import { NotificationJson } from "./NotificationsPanel.tsx";
+import { invoke } from "@tauri-apps/api/tauri";
 
 export function NotificationRow({
   notification,
+  setIsLoading,
 }: {
   notification: NotificationJson;
+  setIsLoading: (l: boolean) => void;
 }) {
   function buildUrl(apiUrl: string) {
     if (!apiUrl) {
@@ -18,21 +21,25 @@ export function NotificationRow({
   const icons = {
     review_requested: "fa-solid fa-user-check",
     mention: "fa-solid fa-at",
+    team_mention: "fa-solid fa-at",
+    assign: "fa-regular ha-hand-point-right",
   };
 
   return (
     <li className="notification-row">
-      <a href={buildUrl(notification.subject.url)} target="_blank">
-        <div className="notification-row-grid">
-          <div className="notification-icon">
+      <div className="notification-row-grid">
+        <div className="notification-icon">
+          <a href={buildUrl(notification.subject.url)} target="_blank">
             <i
               className={
                 icons[notification.reason as keyof typeof icons] ??
                 "fa-brands fa-github-square"
               }
             />
-          </div>
-          <div className="notification-text-section">
+          </a>
+        </div>
+        <div className="notification-text-section">
+          <a href={buildUrl(notification.subject.url)} target="_blank">
             <h4>
               {notification.reason
                 .split("_")
@@ -42,9 +49,16 @@ export function NotificationRow({
                 .join(" ")}
             </h4>
             <p className="notification-text">{notification.subject.title}</p>
-          </div>
+          </a>
         </div>
-      </a>
+        <i
+          className="fa-solid fa-bell-slash notification-option"
+          onClick={() => {
+            setIsLoading(true);
+            invoke("unsubscribe", { url: notification.subscription_url });
+          }}
+        />
+      </div>
     </li>
   );
 }

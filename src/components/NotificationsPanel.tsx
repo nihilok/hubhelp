@@ -9,6 +9,7 @@ import { NotificationsReadout } from "./NotificationsReadout.tsx";
 import "./notifications.css";
 
 export interface NotificationJson {
+  subscription_url: string;
   id: string;
   subject: { title: string; url: string; latest_comment_url: string };
   reason: string;
@@ -20,6 +21,27 @@ type Response = { notifications: NotificationJson[] };
 interface Props {
   hasToken: boolean;
   setHasToken: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+function LoadingSpinner() {
+  return (
+    <div className="loading-spinner-container">
+      <div className="lds-spinner">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+  );
 }
 
 export function NotificationsPanel({ hasToken, setHasToken }: Props) {
@@ -67,6 +89,7 @@ export function NotificationsPanel({ hasToken, setHasToken }: Props) {
   const getInterval = useRef<ReturnType<typeof setInterval>>();
 
   const skipUpdate = useRef(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   function enqueue(response: Response) {
     setNotificiationsQueue((prevQueue) => {
@@ -92,7 +115,9 @@ export function NotificationsPanel({ hasToken, setHasToken }: Props) {
 
   useEffect(() => {
     const loopedFunc = () =>
-      invoke("get_notifications").then((result) => enqueue(result as Response));
+      invoke("get_notifications")
+        .then((result) => enqueue(result as Response))
+        .finally(() => setIsLoading(false));
     clearInterval(getInterval.current);
     loopedFunc();
     getInterval.current = setInterval(loopedFunc, 1000);
@@ -144,6 +169,7 @@ export function NotificationsPanel({ hasToken, setHasToken }: Props) {
 
   return (
     <div className="notifications-panel">
+      {isLoading && <LoadingSpinner />}
       {!hasToken ? (
         <>
           <form
@@ -196,7 +222,10 @@ export function NotificationsPanel({ hasToken, setHasToken }: Props) {
               minutes
             </label>
           </div>
-          <NotificationsReadout notifications={notificationsQueue} />
+          <NotificationsReadout
+            notifications={notificationsQueue}
+            setIsLoading={setIsLoading}
+          />
           <div className="row-center gap-1 notifications-link">
             <a href={"https://github.com/notifications"} target="_blank">
               View All Notifications

@@ -65,7 +65,7 @@ export function SearchPanel() {
         >
           <input
             name="repo"
-            placeholder="Repository (org/repo)"
+            placeholder="Repository (owner/repo)"
             value={formState.repo}
             onChange={onChange}
             required={true}
